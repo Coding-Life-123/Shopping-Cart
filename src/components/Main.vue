@@ -39,7 +39,7 @@ function updateCart(product, quantity) {
 </script>
 
 <template>
-  <div class="main-container" style="padding: 20px; z-index: 20; width: 60%; margin: 0 auto; display: flex; flex-direction: column; border-radius: 20px; background: linear-gradient(200deg, var(--q-third), var(--q-fourth)); ">
+  <div class="main-container" style="padding: 20px; z-index: 20; width: 60%; margin: 30px auto; display: flex; flex-direction: column; border-radius: 20px; background: linear-gradient(200deg, var(--third), var(--fourth)); ">
     <h1 style="font-size: 50px; margin: 20px auto;">🛒 Carrito de Compras</h1>
 
     <div class="products">

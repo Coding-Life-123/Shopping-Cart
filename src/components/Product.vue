@@ -23,12 +23,14 @@ watch(quantity, (newVal) => {
     <div v-show="quantity > 0" class="hasAmount" style="display: flex; margin: auto 0;">
         <q-btn round @click="quantity--" 
             style="background-color: #ff3333;
-            height: 20px; width: 20px;" 
+            height: 10px; width: 10px;
+            font-weight: 600; font-size: large;" 
             label="-"/>
         <p style="margin: auto 20px; font-size: large;">{{ quantity }}</p>
         <q-btn round @click="quantity++" 
             style="background-color: #33ff33;
-            height: 20px; width: 20px;
+            height: 10px; width: 10px;
+            font-weight: 600; font-size: large;
             " 
             label="+"/>
     </div>
