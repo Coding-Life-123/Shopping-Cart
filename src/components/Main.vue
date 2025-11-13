@@ -69,6 +69,50 @@ watch(total, (newVal, oldVal)=>{
   }
 })
 
+let timer = null
+
+watch(totalItems, (newVal, oldVal)=>{
+  if(newVal!==oldVal){
+    clearTimeout(timer)
+
+    timer = setTimeout(() => {        
+      localStorage.setItem('carrito', JSON.stringify(newVal));
+      $q.notify({
+        message:`Se actualizó el carrito en el localStorage`,
+        color: 'green-6',
+        position: 'top',
+        timeout: 2000
+      })
+    }, 800);
+  }
+})
+
+
+const carritoGuardado = ref(JSON.parse(localStorage.getItem('carrito')))
+console.log(carritoGuardado.value)
+
+
+watch(totalItems, (newVal, oldVal)=>{
+  const carritoGuardado = ref(JSON.parse(localStorage.getItem('carrito')))
+
+  totalItems.value = carritoGuardado.value;
+  if(totalItems.value.length == 0 && carritoGuardado.value.length !== 0){
+    $q.notify({
+      message:`Se actualizó el carrito actual con los valores encontrados localmente`,
+      color: 'grey-6',
+      position: 'bottom-right',
+      timeout: 2000
+    })
+  }else{
+    $q.notify({
+      message:`No se encontró ningún carrito guardado`,
+      color: 'grey-6',
+      position: 'bottom-right',
+      timeout: 2000
+    })
+  }
+})
+
 </script>
 
 <template>
