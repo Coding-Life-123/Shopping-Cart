@@ -14,12 +14,12 @@ watch(quantity, (newVal) => {
 </script>
 
 <template>
-  <div class="product-card" style="display: flex; justify-content: space-between;">
+  <div class="product-card" style="display: flex; justify-content: space-between; padding: 0px;">
     <div class="product" style="text-align: left;">
         <h3 style="font-size: x-large; margin-bottom: 5px;">{{ product.name }}</h3>
         <p style="color: greenyellow; font-size: larger; font-weight: 600; margin-top: 0px;">${{ product.price }}</p>
     </div>
-    <q-btn v-show="quantity === 0" style="margin: auto 0;" @click="quantity = 1" label="Agregar al Carrito"/>
+    <q-btn v-show="quantity === 0" style="margin: auto 0; background-color: aquamarine; color: darkslategray; font-weight: 600; border-radius: 14px;" @click="quantity = 1" label="Agregar al Carrito"/>
     <div v-show="quantity > 0" class="hasAmount" style="display: flex; margin: auto 0;">
         <q-btn round @click="quantity--" 
             style="background-color: #ff3333;

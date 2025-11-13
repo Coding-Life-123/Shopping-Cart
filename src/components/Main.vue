@@ -1,6 +1,7 @@
 <script setup>
-import { ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import Product from './Product.vue'
+import { useQuasar } from 'quasar';
 
 const products = [
   { id: 1, name: 'Laptop Dell', price: 899 },
@@ -20,26 +21,58 @@ const products = [
   { id: 15, name: 'Router TP-Link AC1200', price: 79 }
 ];
 
-const selectedProducts = ref([])
+const totalItems = ref([])
 
 function updateCart(product, quantity) {
-  const existing = selectedProducts.value.find(p => p.id === product.id)
+  const existing = totalItems.value.find(p => p.id === product.id)
 
   if (quantity > 0) {
     if (existing) {
       existing.quantity = quantity
     } else {
-      selectedProducts.value.push({ ...product, quantity })
+      totalItems.value.push({ ...product, quantity })
     }
   } else {
-    selectedProducts.value = selectedProducts.value.filter(p => p.id !== product.id)
+    totalItems.value = totalItems.value.filter(p => p.id !== product.id)
   }
 }
+
+const subtotal = computed(()=>{
+  return totalItems.value.reduce((acc, p)=>{
+    return acc + (p.price * p.quantity)
+  }, 0)
+})
+
+const impuesto = computed(()=>{
+  return Math.round((subtotal.value*0.16)*100)/100
+})
+
+const total = computed(()=>{
+  return Math.round((subtotal.value + impuesto.value)*100)/100
+})
+
+const $q = useQuasar()
+const alertCart = ref(false)
+
+watch(total, (newVal, oldVal)=>{
+  if(newVal>1000 && alertCart.value == false){
+    $q.notify({
+      message:`Tu carrito supera los $1000. ¡Podrías calificar para envío gratis!`,
+      color: 'yellow-9',
+      position: 'top',
+      timeout: 2000
+    })
+
+    alertCart.value = true
+  }else if(newVal < 1000){
+    alertCart.value = false
+  }
+})
 
 </script>
 
 <template>
-  <div class="main-container" style="padding: 20px; z-index: 20; width: 60%; margin: 30px auto; display: flex; flex-direction: column; border-radius: 20px; background: linear-gradient(200deg, var(--third), var(--fourth)); ">
+  <div class="main-container" style="padding: 20px 60px; z-index: 20; width: 60%; margin: 30px auto; display: flex; flex-direction: column; border-radius: 20px; background: linear-gradient(200deg, var(--third), var(--fourth)); ">
     <h1 style="font-size: 50px; margin: 20px auto;">🛒 Carrito de Compras</h1>
 
     <div class="products">
@@ -52,10 +85,16 @@ function updateCart(product, quantity) {
     </div>
 
     <h2>Productos Seleccionados:</h2>
+    <hr style="width: 100%;"></hr>
     <ul>
-      <li v-for="p in selectedProducts" :key="p.id">
-        {{ p.name }} - Cantidad: {{ p.quantity }}
+      <li style="display: flex; justify-content: space-between; font-size: 18px;" v-for="p in totalItems" :key="p.id">
+        <p>x{{ p.quantity }} {{ p.name }}</p> <p style="color: greenyellow; font-weight: 600;">${{ p.quantity*p.price }}</p>
       </li>
     </ul>
+    <hr style="width: 100%; margin-bottom: 20px;"></hr>
+    <div style="display: flex; justify-content: space-between; font-size: 16px; width: 100%;"><p>Subtotal:</p> <p style="color: yellowgreen; font-weight: 600;">${{ subtotal }}</p></div>
+    <div style="display: flex; justify-content: space-between; font-size: 16px; width: 100%;"><p>Impuesto:</p> <p style="color: yellowgreen; font-weight: 600;">${{ impuesto }}</p></div>
+    <hr style="width: 100%; margin-bottom: 20px;">
+    <div style="display: flex; justify-content: space-between; font-size: 20px; width: 100%;"><p>Total:</p> <p style="color: yellowgreen; font-weight: 600;">${{ total }}</p></div>
   </div>
 </template>
